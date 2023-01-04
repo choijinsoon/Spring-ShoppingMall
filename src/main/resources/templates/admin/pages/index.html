@@ -9,20 +9,21 @@
     <main role="main" class="container">
         <div class="display-2">Pages</div>
         <a th:href="@{/admin/pages/add}" class="btn btn-primary my-3">추가하기</a>
+        <div th:if="${message}" th:class="${'alert '+alertClass}" th:text="${message}"></div>
 
         <div th:if="${!pages.empty}">
-            <table class="table" id="pages">
+            <table class="table sorting" id="pages">
                 <tr class="home">
                     <th>제 목</th>
                     <th>슬러그</th>
                     <th>수 정</th>
                     <th>삭 제</th>
                 </tr>
-                <tr th:each="page:${pages}">
+                <tr th:each="page:${pages}" th:id="'id_'+${page.id}" th:class="${page.slug}">
                     <td th:text="${page.title}"></td>
                     <td th:text="${page.slug}"></td>
                     <td><a th:href="@{'/admin/pages/edit/' + ${page.id}}">수정</a></td>
-                    <td><a th:href="@{'/admin/pages/delete' + ${page.id}}">삭제</a></td>
+                    <td><a th:if="${page.slug != 'home'}" class="deleteConfirm" th:href="@{'/admin/pages/delete/' + ${page.id}}">삭제</a></td>
                 </tr>
             </table>
         </div>
@@ -32,6 +33,22 @@
     </main>
 
     <footer th:replace="/fragments/footer :: footer"></footer>
+    <script>
+        $('table#pages').sortable({
+            items: 'tr:not(.home)',
+            placeholder: 'ui-state-highlight',
+            update: function(){
+                let ids = $('table#pages').sortable('serialize');
+
+                console.log(ids);
+                let url = '/admin/pages/reorder';
+
+                $.post(url, ids, function(data){
+                    console.log(data);
+                });
+            },
+        });
+    </script>
 
 </body>
 
