@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.myapp.shoppingmall.dao.PageRepository;
 import com.myapp.shoppingmall.entities.Page;
@@ -37,9 +38,25 @@ public class AdminPageController {
     }
 
     @PostMapping("/add")
-    public String add(@Valid Page page, BindingResult bindingResult){
+    public String add(@Valid Page page, BindingResult bindingResult, RedirectAttributes attr){
         if(bindingResult.hasErrors())
             return "admin/pages/add";
-        return "redirect:admin/pages/add";
+        attr.addFlashAttribute("message", "성공적으로 페이지 추가됨");
+        attr.addFlashAttribute("alertClass", "alert-success");
+
+        String slug = page.getSlug() == "" ? page.getTitle().toLowerCase().replace(" ", "-") : page.getSlug();
+        Page slugExist = pageRepo.findBySlug(slug);
+
+        if(slugExist != null){
+            attr.addFlashAttribute("message", "입력한 slug가 이미 존재합니다.");
+            attr.addFlashAttribute("alertClass", "alert-danger");
+            attr.addFlashAttribute("page", page);
+        } else {
+            page.setSlug(slug);
+            page.setSorting(100);
+
+            pageRepo.save(page);
+        }
+        return "redirect:/admin/pages/add";
     }
 }
