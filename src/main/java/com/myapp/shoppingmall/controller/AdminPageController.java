@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.myapp.shoppingmall.dao.CategoryRepository;
 import com.myapp.shoppingmall.dao.PageRepository;
 import com.myapp.shoppingmall.entities.Page;
 
@@ -119,4 +120,5 @@ public class AdminPageController {
         }
         return "ok";
     }
+    
 }
