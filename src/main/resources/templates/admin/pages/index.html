@@ -14,12 +14,14 @@
         <div th:if="${!pages.empty}">
             <table class="table sorting" id="pages">
                 <tr class="home">
+                    <th>번 호</th>
                     <th>제 목</th>
                     <th>슬러그</th>
                     <th>수 정</th>
                     <th>삭 제</th>
                 </tr>
                 <tr th:each="page:${pages}" th:id="'id_'+${page.id}" th:class="${page.slug}">
+                    <td th:text="${page.sorting}"></td>
                     <td th:text="${page.title}"></td>
                     <td th:text="${page.slug}"></td>
                     <td><a th:href="@{'/admin/pages/edit/' + ${page.id}}">수정</a></td>

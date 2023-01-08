@@ -8,10 +8,10 @@
 
     <main role="main" class="container">
         <div class="container">
-            <div class="display-2">상품 추가</div>
+            <div class="display-2">상품 수정</div>
             <a th:href="@{/admin/products}" class="btn btn-primary my-3">돌아가기</a>
 
-            <form method="post" enctype="multipart/form-data" th:object="${product}" th:action="@{/admin/products/add}">
+            <form method="post" enctype="multipart/form-data" th:object="${product}" th:action="@{/admin/products/edit}">
                 <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">에러 발생</div>
                 <div th:if="${message}" th:class="${'alert '+alertClass}" th:text="${message}"></div>
                 <div class="form-group">
@@ -26,12 +26,16 @@
                 </div>
                 <div class="form-group">
                     <label for="file">이미지</label>
-                    <input name="file" class="form-control-file" type="file" th:id="file" placeholder="상품 이미지">
+                    <input name="file" class="form-control-file" type="file" th:id="file">
                     <img src="#" id="imgPreview">
+                    <br><br>
+                    <label for="">현재 이미지</label>
+                    <br>
+                    <img th:src="@{'/media/' + ${product.image}}" style="width: 200px">
                 </div>
                 <div class="form-group">
                     <label for="">가 격</label>
-                    <input type="text" class="form-control" th:field="*{price}" placeholder="가격">
+                    <input type="text" class="form-control" th:field="*{price}" placeholder="가격(원)">
                     <span class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
                 </div>
                 <div class="form-group">
@@ -42,7 +46,8 @@
                     </select>
                     <span class="error" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></span>
                 </div>
-                <button type="submit" class="btn btn-danger">추 가</button>
+                <input type="hidden" th:field="*{id}" th:value="${product.id}">
+                <button type="submit" class="btn btn-danger">수 정</button>
             </form>
         </div>
     </main>
