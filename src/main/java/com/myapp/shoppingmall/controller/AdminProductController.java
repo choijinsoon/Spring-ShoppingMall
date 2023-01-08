@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,8 +41,11 @@ public class AdminProductController {
     private CategoryRepository categoryRepo;
     
     @GetMapping()
-    public String index(Model model){
-        List<Product> products = productRepo.findAll();
+    public String index(Model model, @RequestParam(value = "page", defaultValue = "0") int page){
+        int perPage = 6;
+        Pageable pageable = PageRequest.of(page, perPage);
+        
+        Page<Product> products = productRepo.findAll(pageable);
         List<Category> categories = categoryRepo.findAll();
         
         HashMap<Integer, String> cateIdAndName = new HashMap<>();
@@ -48,7 +54,15 @@ public class AdminProductController {
         
         model.addAttribute("products", products);
         model.addAttribute("cateIdAndName", cateIdAndName);
+
+        long count = productRepo.count();
+        double pageCount = Math.ceil((double)count / (double)perPage);
         
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("perPage", perPage);
+        model.addAttribute("count", count);
+        model.addAttribute("page", page);
+
         return "admin/products/index";
     }
     
