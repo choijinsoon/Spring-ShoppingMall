@@ -88,7 +88,6 @@ public class AdminPageController {
             attr.addFlashAttribute("page", page);
         } else {
             page.setSlug(slug);
-            page.setSorting(100);
 
             pageRepo.save(page);
         }
