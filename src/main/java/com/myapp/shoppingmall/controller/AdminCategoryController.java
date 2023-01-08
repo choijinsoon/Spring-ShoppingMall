@@ -88,7 +88,6 @@ public class AdminCategoryController {
             attr.addFlashAttribute("category", category);
         } else {
             category.setSlug(slug);
-            category.setSorting(100);
 
             categoryRepo.save(category);
         }
