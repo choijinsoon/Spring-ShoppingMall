@@ -10,3 +10,11 @@ table.sorting tr:not(.home){
 .ck.ck-content{
     height: 15em;
 }
+div.productAdded{
+    position: absolute;
+    bottom: 5px;
+    left: 10em;
+}
+.hide{
+    display: none;
+}

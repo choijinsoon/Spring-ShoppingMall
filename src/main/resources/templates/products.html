@@ -20,6 +20,12 @@
                         <h4 th:text="${product.name}"></h4>
                         <div class="decs" th:utext="${product.description}"></div>
                         <p th:text="${product.price}+'원'"></p>
+                        <div style="position: relative;">
+                            <p>
+                                <a th:href="@{'/cart/add/' + ${product.id}}" th:attr="data-id=${product.id}" class="btn btn-primary addToCart">장바구니 추가</a>
+                            </p>
+                            <div class="btn btn-sm btn-success hide productAdded">추가됨!</div>
+                        </div>
                     </div>
                 </div>
                 <nav class="mt-3" th:if="${count > perPage}">
@@ -41,6 +47,25 @@
     
     <footer th:replace="/fragments/footer :: footer"></footer>
     
+    <script>
+        $('a.addToCart').click(function (e){
+            e.preventDefault();
+            // alert('장바구니 누름');
+            let $this = $(this);
+            
+            let id = $this.attr('data-id');
+            let url = '/cart/add/' + id;
+
+            $.get(url, {}, function (data){
+                $('div.cart').html(data);
+            }).done(function (){
+                $this.parent().parent().find('div.productAdded').fadeIn();
+                setTimeout(function (){
+                    $this.parent().parent().find('div.productAdded').fadeOut();
+                }, 1000)
+            })
+        });
+    </script>
 </body>
 
 </html>

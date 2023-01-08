@@ -17,13 +17,13 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/cart")
+@SuppressWarnings("unchecked")
 public class CartController {
     
     @Autowired
     private ProductRepository productRepo;
 
     @GetMapping("/add/{id}")
-    @SuppressWarnings("unchecked")
     public String add(@PathVariable int id, HttpSession session, Model model){
         Product product = productRepo.getById(id);
 
@@ -41,6 +41,33 @@ public class CartController {
                 session.setAttribute("cart", cart);
             }
         }
-        return "";
+
+        HashMap<Integer, Cart> cart = (HashMap<Integer, Cart>)session.getAttribute("cart");
+
+        int size = 0;
+        int total = 0;
+
+        for(Cart item : cart.values()){
+            size += item.getQuantity();
+            total += item.getQuantity() * Integer.parseInt(item.getPrice());
+        }
+
+        model.addAttribute("size", size);
+        model.addAttribute("total", total);
+
+        return "cart_view";
+    }
+
+    @GetMapping("/view")
+    public String view(HttpSession session, Model model){
+        if(session.getAttribute("cart") == null)
+            return "redirect:/";
+
+        HashMap<Integer, Cart> cart = (HashMap<Integer, Cart>)session.getAttribute("cart");
+
+        model.addAttribute("cart", cart);
+        model.addAttribute("noCartView", true);
+
+        return "cart";
     }
 }
