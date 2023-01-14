@@ -86,9 +86,9 @@ public class CartController {
             cart.remove(id);
             if(cart.size() == 0)
                 session.removeAttribute("cart");
-            else 
+        } else 
                 cart.get(id).setQuantity(--qty);
-        }
+        
 
         String refererLink = httpServletRequest.getHeader("Referer");
 
