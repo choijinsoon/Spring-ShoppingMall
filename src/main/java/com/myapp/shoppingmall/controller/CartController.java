@@ -8,11 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.myapp.shoppingmall.dao.ProductRepository;
 import com.myapp.shoppingmall.entities.Cart;
 import com.myapp.shoppingmall.entities.Product;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -24,7 +27,7 @@ public class CartController {
     private ProductRepository productRepo;
 
     @GetMapping("/add/{id}")
-    public String add(@PathVariable int id, HttpSession session, Model model){
+    public String add(@PathVariable int id, HttpSession session, Model model, @RequestParam(required = false) String cartPage){
         Product product = productRepo.getById(id);
 
         if(session.getAttribute("cart") == null){
@@ -35,7 +38,7 @@ public class CartController {
             HashMap<Integer, Cart> cart = (HashMap<Integer, Cart>)session.getAttribute("cart");
             if(cart.containsKey(id)){
                 int qty = cart.get(id).getQuantity();
-                cart.put(id, new Cart(id, product.getName(), product.getPrice(), qty++, product.getImage()));
+                cart.put(id, new Cart(id, product.getName(), product.getPrice(), ++qty, product.getImage()));
             } else {
                 cart.put(id, new Cart(id, product.getName(), product.getPrice(), 1, product.getImage()));
                 session.setAttribute("cart", cart);
@@ -55,6 +58,9 @@ public class CartController {
         model.addAttribute("size", size);
         model.addAttribute("total", total);
 
+        if(cartPage != null)
+            return "redirect:/cart/view";
+
         return "cart_view";
     }
 
@@ -69,5 +75,45 @@ public class CartController {
         model.addAttribute("noCartView", true);
 
         return "cart";
+    }
+
+    @GetMapping("/subtract/{id}")
+    public String subtract(@PathVariable int id, HttpSession session, Model model, HttpServletRequest  httpServletRequest){
+        HashMap<Integer, Cart> cart = (HashMap<Integer, Cart>) session.getAttribute("cart");
+        int qty = cart.get(id).getQuantity();
+
+        if(qty == 1){
+            cart.remove(id);
+            if(cart.size() == 0)
+                session.removeAttribute("cart");
+            else 
+                cart.get(id).setQuantity(--qty);
+        }
+
+        String refererLink = httpServletRequest.getHeader("Referer");
+
+        return "redirect:" + refererLink;
+    }
+
+    @GetMapping("/remove/{id}")
+    public String remove(@PathVariable int id, HttpSession session, Model model, HttpServletRequest httpServletRequest){
+        HashMap<Integer, Cart> cart = (HashMap<Integer, Cart>) session.getAttribute("cart");
+
+        cart.remove(id);
+
+        if(cart.size() == 0)
+            session.removeAttribute("cart");
+
+        String refererLink = httpServletRequest.getHeader("Referer");
+
+        return "redirect:" + refererLink;
+    }
+
+    @GetMapping("/clear")
+    public String clear(HttpSession session, HttpServletRequest httpServletRequest){
+        session.removeAttribute("cart");
+        String refererLink = httpServletRequest.getHeader("Referer");
+
+        return "redirect:" + refererLink;
     }
 }

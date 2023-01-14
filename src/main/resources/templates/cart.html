@@ -27,9 +27,9 @@
             </td>
             <td>
               <span th:text="${item.value.quantity}"></span>
-              <a th:href="@{'/cart/add'+${item.value.id}}+'?cartPage=true'" class="btn btn-success btn-sm">+</a>
-              <a th:href="@{'/cart/subtract'+${item.value.id}}+'?cartPage=true'" class="btn btn-primary btn-sm">-</a>
-              <a th:href="@{'/cart/remove'+${item.value.id}}+'?cartPage=true'" class="btn btn-danger btn-sm">삭제</a>
+              <a th:href="@{'/cart/add/'+${item.value.id}}+'?cartPage=true'" class="btn btn-success btn-sm">+</a>
+              <a th:href="@{'/cart/subtract/'+${item.value.id}}+'?cartPage=true'" class="btn btn-primary btn-sm">-</a>
+              <a th:href="@{'/cart/remove/'+${item.value.id}}+'?cartPage=true'" class="btn btn-danger btn-sm">삭제</a>
             </td>
             <td th:text="${item.value.price}+' 원'"></td>
             <td th:with="totalPrice = ${item.value.price}*${item.value.quantity}" th:text="${totalPrice}+' 원'"></td>
