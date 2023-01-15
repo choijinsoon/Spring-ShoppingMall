@@ -32,7 +32,7 @@ public class Common {
             model.addAttribute("pricipal", principal.getName());
 
         List<Page> cpages = pageRepo.findAllByOrderBySortingAsc();
-        List<Category> categories = categoryRepo.findAll();
+        List<Category> categories = categoryRepo.findAllByOrderBySortingAsc();
 
         boolean cartActive = false;
 

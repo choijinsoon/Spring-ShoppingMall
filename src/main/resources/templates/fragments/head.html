@@ -13,6 +13,8 @@
 <head th:fragment="head-admin">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}">
+    <meta id="_csrf_header" name="_csrf_header" ht:content="${_csrf.headerName}">
 
     <title>쇼핑몰 관리자홈</title>
 
