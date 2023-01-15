@@ -20,7 +20,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
 public class User implements UserDetails{
     private static final long serialVersionUID = 1L;
@@ -51,18 +51,6 @@ public class User implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    @Override
-    public String getPassword() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
