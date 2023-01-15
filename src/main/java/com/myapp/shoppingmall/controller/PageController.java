@@ -33,4 +33,10 @@ public class PageController {
         model.addAttribute("page", page);
         return "page";
     }
+
+    @GetMapping("/login")
+    public String login(Model model){
+
+        return "login";
+    }
 }
